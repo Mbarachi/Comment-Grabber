@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Comment Grabber</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <h1>Comment Grabber</h1>
+    <input type="text" id="url" placeholder="Enter URL...." />
+    <button id="submit" onclick="fetchComments()">Submit</button>
+  </body>
+  <script>
+    const fetchComments = () => {
+      // Change to spinner
+      document.getElementById("submit").innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+      const a = { url: document.getElementById("url").value };
+
+      const f = fetch("./api/youtube", {
+        method: "post",
+        body: JSON.stringify(a),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      f.then(response => {
+        const res = response.json();
+        return res;
+      }).then(res => {
+        if (res.comments !== undefined) {
+          window.location.replace(`./${res.comments}.csv`);
+        } else {
+          alert(res.error);
+        }
+        document.getElementById("submit").innerText = "Submit";
+      });
+    };
+  </script>
+</html>
